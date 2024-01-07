@@ -3,17 +3,18 @@
 Contains the TestFileStorageDocs classes
 """
 
-import inspect
-import models
-from models.engine import file_storage
+from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
+from models.engine import file_storage
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+import inspect
 import json
+import models
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
@@ -114,17 +115,14 @@ class TestFileStorage(unittest.TestCase):
 
     def test_get_count(self):
         """Tests File Storage get and count method"""
-        storage = FileStorage()
-        b1 = BaseModel()
-        b2 = BaseModel()
-        b3 = BaseModel()
+        s1 = State(name='State1')
+        s2 = State(name='State2')
 
-        storage.new(b1)
-        storage.new(b2)
-        g1 = storage.get(BaseModel, b1.id)
-        g2 = storage.get(BaseModel, b2.id)
-        self.assertEqual(b1.id, g1.id)
-        self.assertEqual(b2.id, g2.id)
-        self.assertEqual(storage.count(BaseModel), 3)
-        storage.new(b3)
-        self.assertEqual(storage.count(BaseModel), 4)
+        s1.save()
+        s2.save()
+        g1 = storage.get(State, s1.id)
+        g2 = storage.get(State, s2.id)
+        self.assertEqual(s1.id, g1.id)
+        self.assertEqual(s2.id, g2.id)
+        self.assertEqual(storage.count(State), len(storage.all(State)))
+        self.assertEqual(storage.count(), len(storage.all()))

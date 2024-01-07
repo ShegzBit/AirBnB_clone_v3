@@ -152,6 +152,8 @@ class TestBaseModel(unittest.TestCase):
         old_created_at = inst.created_at
         old_updated_at = inst.updated_at
         inst.name = "base_model"
+        inst2 = BaseModel()
+        inst2.name = "base_model2"
         inst.save()
         new_created_at = inst.created_at
         new_updated_at = inst.updated_at

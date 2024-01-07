@@ -1,7 +1,7 @@
-# AirBnB Clone - The Console
-The console is the first segment of the AirBnB project at Holberton School that will collectively cover fundamental concepts of higher level programming. The goal of AirBnB project is to eventually deploy our server a simple copy of the AirBnB Website(HBnB). A command interpreter is created in this segment to manage objects for the AirBnB(HBnB) website.
+# AirBnB_clone_v3 - RESTful API
+This project is about designing a RESTful API with Flask web framework. The API is designed to manage the objects of the AirBnB(HBnB) [website](https://www.airbnb.com/) clone project that started from the console (command interpreter), followed by Web static, MySQL, Deploy static and now into a RESTful API.
 
-#### Functionalities of this command interpreter:
+## Functionalities of this command interpreter:
 * Create a new object (ex: a new User or a new Place)
 * Retrieve an object from a file, a database etc...
 * Do operations on objects (count, compute stats, etc...)
@@ -14,6 +14,7 @@ The console is the first segment of the AirBnB project at Holberton School that 
 * [File Descriptions](#file-descriptions)
 * [Usage](#usage)
 * [Examples of use](#examples-of-use)
+* [RESTful API usage](#restful-api-usage)
 * [Bugs](#bugs)
 * [Authors](#authors)
 * [License](#license)
@@ -22,22 +23,22 @@ The console is the first segment of the AirBnB project at Holberton School that 
 This project is interpreted/tested on Ubuntu 14.04 LTS using python3 (version 3.4.3)
 
 ## Installation
-* Clone this repository: `git clone "https://github.com/alexaorrico/AirBnB_clone.git"`
-* Access AirBnb directory: `cd AirBnB_clone`
+* Clone this repository: `git clone "https://github.com/ShegzBit/AirBnB_clone_v3.git"`
+* Access AirBnb directory: `cd AirBnB_clone_v3`
 * Run hbnb(interactively): `./console` and enter command
 * Run hbnb(non-interactively): `echo "<command>" | ./console.py`
 
 ## File Descriptions
-[console.py](console.py) - the console contains the entry point of the command interpreter. 
+[console.py](console.py) - the console contains the entry point of the command interpreter.
 List of commands this console current supports:
-* `EOF` - exits console 
+* `EOF` - exits console
 * `quit` - exits console
 * `<emptyline>` - overwrites default emptyline method and does nothing
 * `create` - Creates a new instance of`BaseModel`, saves it (to the JSON file) and prints the id
-* `destroy` - Deletes an instance based on the class name and id (save the change into the JSON file). 
+* `destroy` - Deletes an instance based on the class name and id (save the change into the JSON file).
 * `show` - Prints the string representation of an instance based on the class name and id.
-* `all` - Prints all string representation of all instances based or not on the class name. 
-* `update` - Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file). 
+* `all` - Prints all string representation of all instances based or not on the class name.
+* `update` - Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file).
 
 #### `models/` directory contains classes used for this project:
 [base_model.py](/models/base_model.py) - The BaseModel class from which future classes will be derived
@@ -149,14 +150,78 @@ EOF  all  create  destroy  help  quit  show  update
 ** no instance found **
 (hbnb) quit
 ```
+## RESTful API usage
+```
+$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db HBNB_API_HOST=0.0.0.0 HBNB_API_PORT=5000 python3 -m api.v1.app
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+...
+```
+In another terminal:
+```
+$ curl -X GET http://0.0.0.0:5000/api/v1/status
+{
+  "status": "OK"
+}
+$
+$ curl -X GET http://0.0.0.0:5000/api/v1/stats
+{
+  "amenities": 47,
+  "cities": 36,
+  "places": 154,
+  "reviews": 718,
+  "states": 27,
+  "users": 31
+}
+$
+$ curl -X GET http://0.0.0.0:5000/api/v1/states/
+[
+  {
+    "__class__": "State",
+    "created_at": "2017-04-14T00:00:02",
+    "id": "8f165686-c98d-46d9-87d9-d6059ade2d99",
+    "name": "Louisiana",
+    "updated_at": "2017-04-14T00:00:02"
+  },
+  {
+    "__class__": "State",
+    "created_at": "2017-04-14T16:21:42",
+    "id": "1a9c29c7-e39c-4840-b5f9-74310b34f269",
+    "name": "Arizona",
+    "updated_at": "2017-04-14T16:21:42"
+  },
+...
+$
+$ curl -X GET http://0.0.0.0:5000/api/v1/states/8f165686-c98d-46d9-87d9-d6059ade2d99
+ {
+  "__class__": "State",
+  "created_at": "2017-04-14T00:00:02",
+  "id": "8f165686-c98d-46d9-87d9-d6059ade2d99",
+  "name": "Louisiana",
+  "updated_at": "2017-04-14T00:00:02"
+}
+```
+Other https methods (POST, PUT and DELETE) are also considered
+```
+$ curl -X PUT http://0.0.0.0:5000/api/v1/states/feadaa73-9e4b-4514-905b-8253f36b46f6 -H "Content-Type: application/json" -d '{"name": "California is so cool"}'
+{
+  "__class__": "State",
+  "created_at": "2017-04-15T01:30:28",
+  "id": "feadaa73-9e4b-4514-905b-8253f36b46f6",
+  "name": "California is so cool",
+  "updated_at": "2017-04-15T01:51:08.044996"
+}
+```
 
 ## Bugs
-No known bugs at this time. 
+No known bugs at this time.
 
 ## Authors
-Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
+Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)
+Fawaz Abdganiyu - [Github](https://github.com/fawazabdganiyu) / [Twitter](https://twitter.com/FAbdganiyu)
+Gabriel Awotubo - [Github](https://github.com/ShegzBit) / [Twitter](https://twitter.com/feranmiawotubo1)
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
+
 
 Second part of Airbnb: Joann Vuong
 ## License
-Public Domain. No copy write protection. 
+Public Domain. No copy write protection.

@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 """ State RESTful API definition
 """
 from flask import jsonify, abort, request

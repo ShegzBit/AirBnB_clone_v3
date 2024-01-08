@@ -48,6 +48,9 @@ def delete_city(city_id):
 def create_city(state_id):
     """ Create a new state
     """
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
     city = request.get_json()
     if city is None:
         abort(400, 'Not a JSON')

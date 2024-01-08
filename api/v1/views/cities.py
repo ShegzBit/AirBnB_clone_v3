@@ -15,6 +15,8 @@ def cities(state_id):
     """ Get the `City` objetcs
     """
     states = storage.get(State, state_id)
+    if state is None:
+        abort(404)
     return jsonify([city.to_dict() for city in states.cities])
 
 

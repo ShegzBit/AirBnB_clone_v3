@@ -15,6 +15,7 @@ def states():
     states = storage.all(State)
     return jsonify([state.to_dict() for state in states.values()])
 
+
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def state_from_id(state_id):
     """ Get a particular state with the given id
@@ -25,7 +26,8 @@ def state_from_id(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_state(state_id):
     """ Delete a state with the given id
     """

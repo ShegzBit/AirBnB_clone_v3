@@ -13,7 +13,7 @@ def get_users():
     """ Get the `User` objetcs
     """
     users = storage.all(User)
-    return jsonify([user.to_dict() for obj in users.values()])
+    return jsonify([user.to_dict() for user in users.values()])
 
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)

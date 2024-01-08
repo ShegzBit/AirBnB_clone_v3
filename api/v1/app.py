@@ -2,7 +2,7 @@
 """flask RESTful API definition for AirBnB clone
 """
 import os
-from flask import Flask
+from flask import Flask, jsonify, make_response
 
 from api.v1.views import app_views
 from models import storage
@@ -16,6 +16,13 @@ def teardown_appcontext(exception=None):
     """Remove the current SQLAlchemy Session
     """
     storage.close()
+
+
+@app.errorhandler(404)
+def error_handler(err):
+    """ Return 404 error response
+    """
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == '__main__':

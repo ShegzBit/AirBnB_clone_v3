@@ -2,12 +2,15 @@
 """ State RESTful API definition
 """
 from flask import jsonify, abort, request
+from functools import reduce
 
 from api.v1.views import app_views
 from models import storage
+from models.amenity import Amenity
 from models.city import City
 from models.place import Place
 from models.user import User
+from models.state import State
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -86,3 +89,41 @@ def update_place(place_id):
     place.save()
 
     return jsonify(place.to_dict()), 200
+
+
+@app_views.route('/places_search', methods=['POST'],
+                 strict_slashes=False)
+def search_place():
+    """
+    Searches for places based on given State and City
+    and filters them based on amenity
+    """
+    data = request.get_json()
+    if data is None:
+        abort(400, 'Not a JSON')
+    states = data.get('states', [])
+    cities = data.get('cities', [])
+    amenities = data.get('amenities', [])
+    cities = list(map(lambda id: storage.get(City, id), cities))
+    states = list(map(lambda id: storage.get(State, id), states))
+    for state in states:
+        cities.extend(state.cities)
+    main_cities = set()
+    main_cities.update(cities)
+    places = [city.places for city in main_cities]
+    flat_places = []
+    for place in places:
+        flat_places.extend(place)
+    flat_place_copy = flat_places[:]
+    for place in flat_place_copy:
+        if storage_t != 'db':
+            if any(amn not in place.amenity_ids for amn in amenities):
+                flat_places.remove(place)
+        else:
+            amenities = list(map(lambda id: storage.get(Amenity, id),
+                                 amenities))
+            if any(amn not in place.amenities for amn in amenities):
+                flat_places.remove(place)
+    if data == {}:
+        flat_places = storage.all(Place).values()
+    return jsonify([place.to_dict() for place in flat_places])

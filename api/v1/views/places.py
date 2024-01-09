@@ -56,6 +56,8 @@ def create_place(city_id):
         abort(400, 'Not a JSON')
     if 'name' not in place:
         abort(400, 'Missing name')
+    if 'user_id' not in place:
+        abort(400, 'Missing user_id')
 
     new_place = Place(city_id=city_id, **place)
     new_place.save()
@@ -75,7 +77,8 @@ def update_place(place_id):
         abort(400, 'Not a JSON')
 
     for key, value in new_place.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in (['id', 'user_id', 'city_id',
+                       'created_at', 'updated_at']):
             setattr(place, key, value)
     place.save()
 

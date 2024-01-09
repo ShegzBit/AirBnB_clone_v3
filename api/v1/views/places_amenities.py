@@ -19,7 +19,10 @@ def amenities(place_id):
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    amenities = [storage.get(Amentity, amn) for amn in place.amenity_ids]
+    if storage_t != 'db':
+        amenities = [storage.get(Amentity, amn) for amn in place.amenity_ids]
+    else:
+        amenities = [amn for amn in place.amenities]
     return jsonify(amenities)
 
 
@@ -33,10 +36,14 @@ def unlink_amenity(place_id, amenity_id):
     amenity = storage.get(Amenity, amenity_id)
     if place is None or amenity is None:
         abort(404)
-    all_places = storage.all(Place)
-    if amenity_id not in place.amenity_ids:
-        abort(404)
-    place.amenity_ids.remove(amenity_id)
+    if storage_t != 'db':
+        if amenity_id not in place.amenity_ids:
+            abort(404)
+        place.amenity_ids.remove(amenity_id)
+    else:
+        if amenity not in place.amenities:
+            abort(404)
+        place.amenities.remove(amenity)
     return jsonify({}), 200
 
 
@@ -50,6 +57,9 @@ def link_amenity(place_id, amenity_id):
     amenity = storage.get(Amenity, amenity_id)
     if place is None or amenity is None:
         abort(404)
-    if amenity_id not in place.amenity_ids:
-        place.amenity_ids.append(amenity_id)
+    if storage_t != 'db':
+        if amenity_id not in place.amenity_ids:
+            place.amenity_ids.append(amenity_id)
+    else:
+        place.amenities.append(amenity)
     return jsonify(amenity.to_dict()), 201

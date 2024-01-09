@@ -14,10 +14,10 @@ from models.city import City
 def cities(state_id):
     """ Get the `City` objetcs
     """
-    states = storage.get(State, state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404)
-    return jsonify([city.to_dict() for city in states.cities])
+    return jsonify([city.to_dict() for city in state.cities])
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)

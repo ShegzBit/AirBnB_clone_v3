@@ -36,4 +36,5 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
-        self.password = self.hash_password(self.password)
+        if self.password is not None:
+            self.password = self.hash_password(self.password)
